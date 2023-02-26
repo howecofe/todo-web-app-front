@@ -1,12 +1,30 @@
 import './App.css';
 import Todo from "./Todo";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, List, Paper } from "@mui/material"
 import AddTodo from './AddTodo';
 
 function App() {
   const [items, setItems] = useState([]);
 
+  // useEffect(콜백 함수, 디펜던시 배열) <- 인자 2개
+  // : 첫 렌더링 발생 시 콜백 함수 호출, 그 이후에는 배열 안의 오브젝트 값이 변할 때마다 콜백 함수 호출.
+  useEffect(() => {
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    fetch("http://localhost:8080/todo", requestOptions)
+    .then((response) => response.json())
+    .then(
+      (response) => {
+        setItems(response.data);
+      },
+      (error) => {}
+      );
+    },[]);
+  
   const editItem = () => {
     setItems([...items]);
   };
